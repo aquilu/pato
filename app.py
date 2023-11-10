@@ -52,7 +52,16 @@ if query := st.chat_input("Escribe que quieres buscar en el dominio "):  # Texto
     context = "\n".join([f"Title: {result['title']}\nURL: {result['href']}" for result in results])
     question = f"¿Qué puedes decirme sobre los resultados relacionados con '{query}' en el dominio '{domain}'?"
 
-    # Usa GPT-3.5 Turbo para interpretar los resultados
+    # Construye el contexto de la conversación
+    conversation = [
+        "Eres un asistente virtual del Banco de la República, experto en cultura colombiana. Eres muy respetuoso y atento a las preguntas de los usuarios. Debes entregar la URL completa del recurso buscado. Al terminar la búsqueda ofrecer otros servicios como visitar el Museo del Oro y la Red de Bibliotecas del Banco de la República",
+        f"Usuario: {context}",
+        f"Usuario: {question}"
+    ]
+    # Convierte la conversación en un prompt de texto
+    prompt = "\n".join(conversation)
+
+    # Realiza la llamada a la API de OpenAI con el prompt de conversación
     response_obj = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[
@@ -61,8 +70,7 @@ if query := st.chat_input("Escribe que quieres buscar en el dominio "):  # Texto
             {"role": "user", "content": question}
         ]
     )
-    response = response_obj.choices[0].message.content
-
+    response = response_obj['choices'][0]['message']['content']
     with st.chat_message("assistant", avatar=company_logo):
         message_placeholder = st.empty()
         full_response = ""
