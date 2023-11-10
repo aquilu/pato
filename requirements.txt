@@ -1,3 +1,3 @@
-streamlit
-openai
-duckduckgo_search
+openai==0.27.0
+streamlit==1.28.1
+duckduckgo-search==3.9.4
